@@ -11,9 +11,12 @@ $(function() {
           var vis = new pv.Panel().canvas("timeline").margin(30);
 
           var dyhb_top = 0;
-          var read_top = dyhb_top + 30*data.dyhb[data.dyhb.length-1].row+60;
+          //var read_top = dyhb_top + 30*data.dyhb.length+60;
+          var read_top = dyhb_top + 30*pv.max(data.dyhb,
+                                              function(d) {return d.row;})+60;
           var segment_top = read_top + 30*data.read[data.read.length-1].row+60;
-          var block_top = segment_top + 30*data.segment[data.segment.length-1].row+60;
+          var misc_top = segment_top + 30*data.segment[data.segment.length-1].row+60;
+          var block_top = misc_top + 50;
           var block_row_to_y = {};
           var row_y=0;
           for (var group=0; group < data.block_rownums.length; group++) {
@@ -23,8 +26,8 @@ $(function() {
               }
               row_y += 5;
           }
-
           var height = block_top + row_y;
+
           var kx = bounds.min;
           var ky = 1;
           var x = pv.Scale.linear(bounds.min, bounds.max).range(0, WIDTH-40);
@@ -53,7 +56,9 @@ $(function() {
               .width(function(d){return x(d.finish_time)-x(d.start_time);})
               .title(function(d){return "shnums: "+d.response_shnums;})
               .fillStyle(function(d){return data.server_info[d.serverid].color;})
-              .strokeStyle("black").lineWidth(1);
+              .strokeStyle("black").lineWidth(1)
+          .anchor("left").add(pv.Label).text(function(d){return d.serverid.slice(0,4);})
+          ;
 
           vis.add(pv.Rule)
               .data(data.dyhb)
@@ -61,7 +66,8 @@ $(function() {
               .left(0).width(0)
               .strokeStyle("#888")
               .anchor("left").add(pv.Label)
-              .text(function(d){return d.serverid.slice(0,4);});
+              .text(function(d){return d.serverid.slice(0,4);})
+          ;
 
           /* we use a function for data=relx.ticks() here instead of
            simply .data(relx.ticks()) so that it will be recalculated when
@@ -101,7 +107,7 @@ $(function() {
               .strokeStyle("black").lineWidth(1);
 
           var block = vis.add(pv.Panel).top(block_top);
-          block.anchor("top").top(-20).add(pv.Label).text("block() requests");
+          block.anchor("top").top(-20).add(pv.Label).text("block requests");
 
           var shnum_colors = pv.Colors.category10();
           block.add(pv.Bar)
@@ -117,6 +123,21 @@ $(function() {
                          {if (d.response_length > 100) return 3;
                          else return 1;
                           })
+          ;
+
+          var misc = vis.add(pv.Panel).top(misc_top);
+          misc.anchor("top").top(-20).add(pv.Label).text("misc");
+          misc.add(pv.Bar)
+              .data(data.misc)
+              .height(20)
+              .top(function(d){return 25*d.row;})
+              .left(function(d){return x(d.start_time);})
+              .width(function(d){return x(d.finish_time)-x(d.start_time);})
+              .title(function(d)
+                     {return "start="+d.start_time+"  finish="+d.finish_time+"  duration="+(d.finish_time-d.start_time);})
+              .fillStyle("#eee")
+              .strokeStyle("#444")
+          .anchor("top").add(pv.Label).text(function(d){return d.what;})
           ;
 
 
