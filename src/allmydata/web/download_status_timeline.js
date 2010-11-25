@@ -104,7 +104,8 @@ $(function() {
               .title(function(d){return "seg"+d.segment_number+" ["+d.segment_start+":+"+d.segment_length+"] (took "+(d.finish_time-d.start_time)+")";})
               .fillStyle(function(d){if (d.success) return "#c0ffc0";
                                     else return "#ffc0c0";})
-              .strokeStyle("black").lineWidth(1);
+              .strokeStyle("black").lineWidth(1)
+              .anchor("center").add(pv.Label).text(function(d){return d.segment_number;});
 
           var block = vis.add(pv.Panel).top(block_top);
           block.anchor("top").top(-20).add(pv.Label).text("block requests");
