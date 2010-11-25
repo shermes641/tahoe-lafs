@@ -128,19 +128,20 @@ $(function() {
 
           var misc = vis.add(pv.Panel).top(misc_top);
           misc.anchor("top").top(-20).add(pv.Label).text("misc");
-          misc.add(pv.Bar)
-              .data(data.misc)
-              .height(20)
-              .top(function(d){return 25*d.row;})
-              .left(function(d){return x(d.start_time);})
-              .width(function(d){return x(d.finish_time)-x(d.start_time);})
-              .title(function(d)
-                     {return "start="+d.start_time+"  finish="+d.finish_time+"  duration="+(d.finish_time-d.start_time);})
-              .fillStyle("#eee")
-              .strokeStyle("#444")
-          .anchor("top").add(pv.Label).text(function(d){return d.what;})
-          ;
-
+          if (0) {
+              misc.add(pv.Bar)
+                  .data(data.misc)
+                  .height(20)
+                  .top(function(d){return 25*d.row;})
+                  .left(function(d){return x(d.start_time);})
+                  .width(function(d){return x(d.finish_time)-x(d.start_time);})
+                  .title(function(d)
+                         {return "start="+d.start_time+"  finish="+d.finish_time+"  duration="+(d.finish_time-d.start_time);})
+                  .fillStyle("#eee")
+                  .strokeStyle("#444")
+              .anchor("top").add(pv.Label).text(function(d){return d.what;})
+              ;
+          }
 
           vis.height(height);
 
