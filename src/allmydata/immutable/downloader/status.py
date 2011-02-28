@@ -143,8 +143,8 @@ class DownloadStatus:
         r = (start, length, requesttime, finishtime, bytes, decrypt, paused)
         self.read_events[tag] = r
 
-    def add_known_share(self, serverid, shnum):
-        self.known_shares.append( (serverid, shnum) )
+    def add_known_share(self, server, shnum): # XXX use me
+        self.known_shares.append( (server, shnum) )
 
     def add_problem(self, p):
         self.problems.append(p)
