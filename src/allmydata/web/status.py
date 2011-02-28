@@ -384,7 +384,7 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
             return
         srt = self.short_relative_time
         l = T.div()
-        
+
         t = T.table(align="left", class_="status-download-events")
         t[T.tr[T.th["serverid"], T.th["sent"], T.th["received"],
                T.th["shnums"], T.th["RTT"]]]
@@ -406,10 +406,9 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
                  T.td[",".join([str(shnum) for shnum in shnums])],
                  T.td[self.render_time(None, rtt)],
                  ]]]
-        
         l[T.h2["DYHB Requests:"], t]
         l[T.br(clear="all")]
-        
+
         t = T.table(align="left",class_="status-download-events")
         t[T.tr[T.th["range"], T.th["start"], T.th["finish"], T.th["got"],
                T.th["time"], T.th["decrypttime"], T.th["pausedtime"],
@@ -429,10 +428,9 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
                    T.td[bytes], T.td[rtt], T.td[decrypt], T.td[paused],
                    T.td[speed],
                    ]]
-        
         l[T.h2["Read Events:"], t]
         l[T.br(clear="all")]
-        
+
         t = T.table(align="left",class_="status-download-events")
         t[T.tr[T.th["type"], T.th["segnum"], T.th["when"], T.th["range"],
                T.th["decodetime"], T.th["segtime"], T.th["speed"]]]
@@ -447,7 +445,6 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
                     T.td["-"],
                     T.td["-"],
                     T.td["-"]]]
-                    
                 reqtime = (segnum, when)
             elif etype == "delivery":
                 if reqtime[0] == segnum:
