@@ -47,7 +47,7 @@ class DownloadStatus:
         self.dyhb_requests = {}
 
         # self.requests tracks share-data requests and responses. It maps
-        # serverid to a tuple of:
+        # IServer instance to a tuple of:
         #  shnum,
         #  start,length,  (of data requested)
         #  send time
@@ -94,21 +94,21 @@ class DownloadStatus:
         r = (sent, shnums, when)
         self.dyhb_requests[server][index] = r
 
-    def add_request_sent(self, serverid, shnum, start, length, when):
+    def add_request_sent(self, server, shnum, start, length, when):
         r = (shnum, start, length, when, None, None)
-        if serverid not in self.requests:
-            self.requests[serverid] = []
-        self.requests[serverid].append(r)
-        tag = (serverid, len(self.requests[serverid])-1)
+        if server not in self.requests:
+            self.requests[server] = []
+        self.requests[server].append(r)
+        tag = (server, len(self.requests[server])-1)
         return RequestEvent(self, tag)
 
     def add_request_finished(self, tag, received, when):
         # received="error" on error, else len(data)
-        (serverid, index) = tag
-        r = self.requests[serverid][index]
+        (server, index) = tag
+        r = self.requests[server][index]
         (shnum, start, length, sent, _, _) = r
         r = (shnum, start, length, sent, received, when)
-        self.requests[serverid][index] = r
+        self.requests[server][index] = r
 
     def add_segment_request(self, segnum, when):
         if self.started is None:

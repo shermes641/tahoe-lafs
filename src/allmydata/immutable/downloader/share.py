@@ -726,8 +726,7 @@ class Share:
                          share=repr(self),
                          start=start, length=length,
                          level=log.NOISY, parent=self._lp, umid="sgVAyA")
-            req_ev = ds.add_request_sent(self._server.get_serverid(),
-                                         self._shnum,
+            req_ev = ds.add_request_sent(self._server, self._shnum,
                                          start, length, now())
             d = self._send_request(start, length)
             d.addCallback(self._got_data, start, length, req_ev, lp)

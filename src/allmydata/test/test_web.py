@@ -107,9 +107,9 @@ def build_one_ds():
     e.finished(now+1)
     e = ds.add_read_event(120, 30, now+2) # left unfinished
 
-    e = ds.add_request_sent("serverid_a", 1, 100, 20, now)
+    e = ds.add_request_sent(serverA, 1, 100, 20, now)
     e.finished(20, now+1)
-    e = ds.add_request_sent("serverid_a", 1, 120, 30, now+1) # left unfinished
+    e = ds.add_request_sent(serverA, 1, 120, 30, now+1) # left unfinished
 
     # make sure that add_read_event() can come first too
     ds1 = DownloadStatus("storage_index", 1234)

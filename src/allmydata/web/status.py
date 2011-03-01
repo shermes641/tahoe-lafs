@@ -370,9 +370,9 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
         dyhb_events.sort(key=lambda req: req[1])
         data["dyhb"] = dyhb_events
         request_events = []
-        for serverid,requests in self.download_status.requests.iteritems():
+        for server,requests in self.download_status.requests.iteritems():
             for req in requests:
-                request_events.append( (base32.b2a(serverid),) + req )
+                request_events.append( (server.get_longname(),) + req )
         request_events.sort(key=lambda req: (req[4],req[1]))
         data["requests"] = request_events
         data["segment"] = self.download_status.segment_events
@@ -463,7 +463,7 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
                        T.td[segtime], T.td[speed]]]
             elif etype == "error":
                 t[T.tr[T.td["error"], T.td["seg%d" % segnum]]]
-                
+
         l[T.h2["Segment Events:"], t]
         l[T.br(clear="all")]
 
@@ -472,23 +472,23 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
                T.th["txtime"], T.th["rxtime"], T.th["received"], T.th["RTT"]]]
         reqtime = (None, None)
         request_events = []
-        for serverid,requests in self.download_status.requests.iteritems():
+        for server,requests in self.download_status.requests.iteritems():
             for req in requests:
-                request_events.append( (serverid,) + req )
+                request_events.append( (server,) + req )
         request_events.sort(key=lambda req: (req[4],req[1]))
         for r_ev in request_events:
-            (peerid, shnum, start, length, sent, receivedlen, received) = r_ev
+            (server, shnum, start, length, sent, receivedlen, received) = r_ev
             rtt = None
             if received is not None:
                 rtt = received - sent
-            peerid_s = idlib.shortnodeid_b2a(peerid)
-            t[T.tr(style="background: %s" % self.color(peerid))[
-                T.td[peerid_s], T.td[shnum],
+            color = self.color(server.get_serverid())
+            t[T.tr(style="background: %s" % color)[
+                T.td[server.get_name()], T.td[shnum],
                 T.td["[%d:+%d]" % (start, length)],
                 T.td[srt(sent)], T.td[srt(received)], T.td[receivedlen],
                 T.td[self.render_time(None, rtt)],
                 ]]
-                
+
         l[T.h2["Requests:"], t]
         l[T.br(clear="all")]
 
