@@ -364,9 +364,9 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
         req.setHeader("content-type", "text/plain")
         data = {}
         dyhb_events = []
-        for serverid,requests in self.download_status.dyhb_requests.iteritems():
+        for server,requests in self.download_status.dyhb_requests.iteritems():
             for req in requests:
-                dyhb_events.append( (base32.b2a(serverid),) + req )
+                dyhb_events.append( (server.get_longname(),) + req )
         dyhb_events.sort(key=lambda req: req[1])
         data["dyhb"] = dyhb_events
         request_events = []
@@ -389,20 +389,20 @@ class DownloadStatusPage(DownloadResultsRendererMixin, rend.Page):
         t[T.tr[T.th["serverid"], T.th["sent"], T.th["received"],
                T.th["shnums"], T.th["RTT"]]]
         dyhb_events = []
-        for serverid,requests in self.download_status.dyhb_requests.iteritems():
+        for server,requests in self.download_status.dyhb_requests.iteritems():
             for req in requests:
-                dyhb_events.append( (serverid,) + req )
+                dyhb_events.append( (server,) + req )
         dyhb_events.sort(key=lambda req: req[1])
         for d_ev in dyhb_events:
-            (serverid, sent, shnums, received) = d_ev
-            serverid_s = idlib.shortnodeid_b2a(serverid)
+            (server, sent, shnums, received) = d_ev
             rtt = None
             if received is not None:
                 rtt = received - sent
             if not shnums:
                 shnums = ["-"]
-            t[T.tr(style="background: %s" % self.color(serverid))[
-                [T.td[serverid_s], T.td[srt(sent)], T.td[srt(received)],
+            color = self.color(server.get_serverid())
+            t[T.tr(style="background: %s" % color)[
+                [T.td[server.get_name()], T.td[srt(sent)], T.td[srt(received)],
                  T.td[",".join([str(shnum) for shnum in shnums])],
                  T.td[self.render_time(None, rtt)],
                  ]]]

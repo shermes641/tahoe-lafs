@@ -40,7 +40,7 @@ class DownloadStatus:
         self.helper = False
         self.started = None
         # self.dyhb_requests tracks "do you have a share" requests and
-        # responses. It maps serverid to a tuple of:
+        # responses. It maps an IServer instance to a tuple of:
         #  send time
         #  tuple of response shnums (None if response hasn't arrived, "error")
         #  response time (None if response hasn't arrived yet)
@@ -78,21 +78,21 @@ class DownloadStatus:
         self.problems = []
 
 
-    def add_dyhb_sent(self, serverid, when):
+    def add_dyhb_sent(self, server, when):
         r = (when, None, None)
-        if serverid not in self.dyhb_requests:
-            self.dyhb_requests[serverid] = []
-        self.dyhb_requests[serverid].append(r)
-        tag = (serverid, len(self.dyhb_requests[serverid])-1)
+        if server not in self.dyhb_requests:
+            self.dyhb_requests[server] = []
+        self.dyhb_requests[server].append(r)
+        tag = (server, len(self.dyhb_requests[server])-1)
         return DYHBEvent(self, tag)
 
     def add_dyhb_finished(self, tag, shnums, when):
         # received="error" on error, else tuple(shnums)
-        (serverid, index) = tag
-        r = self.dyhb_requests[serverid][index]
+        (server, index) = tag
+        r = self.dyhb_requests[server][index]
         (sent, _, _) = r
         r = (sent, shnums, when)
-        self.dyhb_requests[serverid][index] = r
+        self.dyhb_requests[server][index] = r
 
     def add_request_sent(self, serverid, shnum, start, length, when):
         r = (shnum, start, length, when, None, None)

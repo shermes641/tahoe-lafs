@@ -74,10 +74,17 @@ class FakeUploader(service.Service):
     def get_helper_info(self):
         return (None, False)
 
+class FakeIServer:
+    def get_name(self): return "short"
+    def get_longname(self): return "long"
+    def get_serverid(self): return "binary-serverid"
+
 def build_one_ds():
     ds = DownloadStatus("storage_index", 1234)
     now = time.time()
 
+    serverA = FakeIServer()
+    serverB = FakeIServer()
     ds.add_segment_request(0, now)
     # segnum, when, start,len, decodetime
     ds.add_segment_delivery(0, now+1, 0, 100, 0.5)
@@ -91,9 +98,9 @@ def build_one_ds():
     ds.add_segment_request(4, now)
     ds.add_segment_delivery(4, now, 0, 140, 0.5)
 
-    e = ds.add_dyhb_sent("serverid_a", now)
+    e = ds.add_dyhb_sent(serverA, now)
     e.finished([1,2], now+1)
-    e = ds.add_dyhb_sent("serverid_b", now+2) # left unfinished
+    e = ds.add_dyhb_sent(serverB, now+2) # left unfinished
 
     e = ds.add_read_event(0, 120, now)
     e.update(60, 0.5, 0.1) # bytes, decrypttime, pausetime
