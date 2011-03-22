@@ -128,7 +128,7 @@ $(function() {
 
           var misc = vis.add(pv.Panel).top(misc_top);
           misc.anchor("top").top(-20).add(pv.Label).text("misc");
-          if (0) {
+          if (1) {
               misc.add(pv.Bar)
                   .data(data.misc)
                   .height(20)
